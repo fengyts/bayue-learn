@@ -1,2 +1,2 @@
 # bayue-test
-learn-test project
+learn and test project
