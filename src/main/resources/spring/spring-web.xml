@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<mvc:annotation-driven />
+
+	<context:component-scan base-package="ng.bayue.test.*">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	
+	<bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter" />
+	<bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=UTF-8</value>
+				<value>text/html;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	<!-- DefaultAnnotationHandlerMapping RequestMappingHandlerMapping 会在 <mvc:annotation-driven />中自动注册 -->
+<!-- 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" /> -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="synchronizeOnSession" value="true" />
+		<property name="messageConverters">
+			<list>
+				<ref bean="jsonHttpMessageConverter" />
+				<ref bean="stringHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+	
+	<!--To enable @RequestMapping process on type level and method level. like <mvc:annotation-driven /> -->
+<!-- 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" /> -->
+<!-- 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" > -->
+<!-- 		<property name="messageConverters"> -->
+<!-- 			<list> -->
+<!-- 				<bean class="org.springframework.http.converter.BufferedImageHttpMessageConverter" /> -->
+<!-- 				<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" /> -->
+<!-- 				<bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter" /> -->
+<!-- 				<bean class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter" /> -->
+<!-- 				<bean class="org.springframework.http.converter.StringHttpMessageConverter" /> -->
+<!-- 				<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"> -->
+<!-- 					<property name="supportedMediaTypes"> -->
+<!-- 						<list> -->
+<!-- 							<value>application/json;charset=UTF-8</value> -->
+<!-- 						</list> -->
+<!-- 					</property> -->
+<!-- 				</bean> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+	<mvc:default-servlet-handler />
+	
+	<!-- jsp视图解析(*.jsp) -->
+	<bean id="internalResourceViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="suffix" value=".jsp" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="order" value="1" />
+	</bean>
+
+	<!-- FreeMarkerViewResolver: freemarker视图解析 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="cache" value="true" />
+		<property name="suffix" value=".ftl" />
+		<property name="order" value="0" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="requestContextAttribute" value="requestContextPath" />
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="exposeSessionAttributes" value="true" />
+		<!-- 支持@SessionAttributes -->
+    	<property name="allowRequestOverride" value="true" />
+		<property name="allowSessionOverride" value="true" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="attributesMap">
+			<map>
+				<entry key="staticDomain" value="${static.domain}" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- FreeMarkerConfigurer: freemarker配置 -->
+	<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
+
+	<bean id="freeMarkerConfigurer" class="ng.bayue.shiro.freemarker.ShiroTagFreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/view/" />
+		<property name="freemarkerVariables">
+			<map>
+				<entry key="xml_escape" value-ref="fmXmlEscape" />
+				<!-- <entry key="imageDownload" value-ref="imageDownload" /> -->
+			</map>
+		</property>
+
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">0</prop>
+				<prop key="default_encoding">UTF-8</prop>
+				<prop key="number_format">0.##########</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+				<prop key="date_format">yyyy-MM-dd</prop>
+				<prop key="time_format">HH:mm:ss</prop>
+				<prop key="classic_compatible">true</prop>
+				<prop key="template_exception_handler">ignore</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource"
+		p:basename="i18n/messages" />
+	<!-- 静态资源路径 -->
+<!-- 	<mvc:resources mapping="/statics/**" location="/statics/" /> -->
+	
+	
+<!-- 	<mvc:interceptors> -->
+<!-- 		<bean class="ng.bayue.test.controller.ResultInterceptor" /> -->
+<!-- 	</mvc:interceptors> -->
+
+
+</beans>
