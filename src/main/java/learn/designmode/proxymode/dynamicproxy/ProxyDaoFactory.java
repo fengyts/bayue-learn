@@ -4,16 +4,13 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-public class ProxyDaoFactory<T> extends Object {
-
+public class ProxyDaoFactory<T> {
+	
 	private T target;
-//	private Class<T> clazz;
 
-	public ProxyDaoFactory(T t) {
-		this.target = t;
-	}
-
-	public ProxyDaoFactory() {
+	public ProxyDaoFactory(T target) {
+		super();
+		this.target = target;
 	}
 
 	@SuppressWarnings("unchecked")
