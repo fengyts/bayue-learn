@@ -1,0 +1,139 @@
+博客：https://blog.csdn.net/ri_mu_xi_shan/article/details/79175110
+
+对象生命周期和类生命周期的区别：
+	对象的生命周期只是类的生命周期中使用阶段的直接引用的一种情况（即实例化对象），而类的生命周期比对象的生命周期要长的多。
+
+jvm中几个重要的内存区域：
+1、方法区：在java虚拟机中有一块专门用来存放已经加载的类信息、常量、静态变量以及方法代码的内存区域，叫做方法区。
+2、常量池是方法区的一部分，主要用来存放常量和类中的符号引用等信息。
+3、堆区：用于存放类的对象实例。
+4、栈区：
+	由一个一个的栈帧组成的后进先出的栈式结构，栈中存放方法运行时产生的局部变量、方法出口等信息。
+	当调用一个方法时，虚拟机栈中就会创建一个栈帧存放这些数据，当方法调用完成后，栈帧就消失，如果方法中调用了其他 方  法，则继续在栈顶创建新的栈帧。
+本地方法栈和程序计数器
+
+java类的生命周期是指一个class文件从加载到卸载的全过程。
+一个类的生命周期：加载 -> 连接 -> 初始化 -> 使用 -> 卸载 五个阶段。
+类加载（加载 -> 连接 -> 初始化）
+加载：
+1》找到需要加载的类并把类的信息加载到jvm的方法区中，
+2》然后再堆区中实例化一个java.lang.Class对象，作为方法区中这个类的信息入口。
+类最常用的两种加载方法：一种根据类的全名找到class文件，一种是从jar包中读取。
+
+
+连接：
+加载之后就是连接阶段，加载和连接阶段可能是交叉执行，但是一定是加载在前，连接在后，
+但是这两个阶段总的开始时间和完成时间是固定的。
+主要任务：做一些加载之后的验证工作及初始化前的准备工作，可细分三个阶段：验证、准备和解析
+1》验证：当一个类被加载之后，必须要验证一下这个类是否合法，比如这个类是不是符合字节码的格式(class文件中只有256个操作码都被使用)、
+   变量与方法是不是有重复、数据类型是不是有效、继承与实现是否合乎标准等。
+   总之，这个阶段的目的就是保证加载的类能够被jvm所运行。
+2》准备：准备阶段的工作是为静态变量分配内存并设为jvm默认的初值，静态变量的初值为jvm默认的初值，而不是在程序中设定的初值
+   基本类型：0，false。
+   引用类型：null
+   常量的默认值为程序中设定的值
+3》解析：将常量池中的符号引用转化成直接引用。在解析阶段，jvm会将所有类或者接口名、字段名、方法名转换成具体的内存地址。
+   符号引用（符号去关联具体的地址）：通过符号去找地址。
+   直接引用（具体的地址）：直接指向对象的地址。
+
+
+连接完成后会根据使用的情况（直接引用还是被动引用）来选择是否对类进行初始化。
+初始化：
+类被直接引用就会触发类的初始化。
+直接引用：
+1》通过new实例化对象、读取或设置类的静态变量、调用类的静态方法
+2》通过反射执行以上三种方法。
+3》初始化子类的时候，会触发父类的初始化。
+4》作为程序入口直接运行时（也就是直接调用main方法）
+除此之外，其他使用类的方式叫被动引用，而被动引用不会触发类的初始化。
+举例说明：
+
+父类：
+
+public class InitClass {
+    static {
+        System.out.println("初始化InitClass");
+    }
+    public static String a = null;
+    public final static String b = InitClass.b;
+    public static void method() {}
+}
+public class SubInitClass extends InitClass {
+    public SubInitClass() {
+        System.out.println("初始化SubInitClass");
+    }
+}
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+ 
+public class DirectlyReference {
+    public static void main(String[] args) {
+        //直接引用引起类的初始化一：new 对象、引用静态类、静态方法
+//        new InitClass();
+//        InitClass.a = "";
+//        String a = InitClass.a;
+//        InitClass.method();
+        //直接引用引起类的初始化二：通过反射实例化对象、读取或设置类的静态变量、调用类的静态方法。
+        try {
+            Class cls = InitClass.class;
+            cls.newInstance();
+            Field f = cls.getDeclaredField("a");
+            f.get("able");
+            Method md = cls.getMethod("method");
+            md.invoke(null, null);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        //直接引用引起类的初始化三：实例化子类，引起父类的初始化
+//        new SubInitClass();
+    }
+}
+类的初始化顺序：
+父类静态语句（包括静态代码块和静态变量，执行顺序按照代码中定义的顺序）-> 子类的静态语句（同上）
+-> 父类非静态语句（包括非静态变量和非静态代码块）->父类构造器 -> 子类非静态代码块（同上）
+-> 子类构造器
+
+
+父类的静态代码块
+fatherStaticVariable:父类的静态变量
+子类的静态代码块
+subStaticVariable:子类的静态变量
+父类的非静态代码块
+fatherNonStaticVariable:父类的非静态变量
+父类的构造函数
+子类的非静态代码块
+subNonStaticVariable:子类的非静态变量
+子类的构造函数
+
+
+使用：
+类的使用包括主动引用和被动引用（参考上），被动引用如下：
+1、引用父类的静态字段只会引起父类的初始化，不会引起子类的初始化。
+2、定义类数组，不会引起类的初始化
+3、引用类的常量，不会引起类的初始化
+public class IndirectReference {
+    public static void main(String[] args) {
+        String a = SubInitClass.a; //引用父类的静态字段，只会引起父类初始化，而不会引起子类的初始化
+        String b = InitClass.a;//使用类的常量不会引起类的初始化
+        SubInitClass[] subInitClasses = new SubInitClass[10];//定义类的数组，不会引起类的初始化
+    }
+}
+直引用会引起类的初始化，而被动引用不会引起类的初始化
+
+
+卸载：
+在类使用完成后，满足下面条件就会被卸载。
+1》该类所有的实例都已经被回收，也就是java堆中不存在该类的任何实例。
+2》加载该类的ClassLoader已经被回收。
+3》该类对应的java.lang.Class对象没有任何地方被引用，无法在任何地方通过反射访问该类的方法。
+满足以上三个条件，jvm就会在方法区垃圾回收时对类进行卸载，即在方法区中清空类信息，java类的整个生命周期就结束了。
+

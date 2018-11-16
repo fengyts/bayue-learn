@@ -8,7 +8,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("test")
 public class TestController {
 
-	@RequestMapping("test")
+	/**
+	 * 测试spring @Reponsebody 返回值处理拦截器
+	 * @return
+	 */
+	@RequestMapping("testResultInterceptor")
 	@ResponseBody
 	public String test() {
 		return "hello world!";

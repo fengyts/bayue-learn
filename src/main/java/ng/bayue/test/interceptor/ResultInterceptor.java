@@ -1,4 +1,4 @@
-package ng.bayue.test.controller;
+package ng.bayue.test.interceptor;
 
 import java.lang.annotation.Annotation;
 
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 /**
  * 此拦截器不能拦截@ResponseBody 注解的返回值，若要拦截@ResponseBody注解的返回值有两种方法： 
  * 1.不使用@ResponseBody，在Controller中方法返回值为void, 然后使用response.getWriter.writer()返回；
- * 2. 使用spring4.1以上版本的新特性：@ControllerAdvice注解和spring 4.1以上版本的ResponseBodyAdvice接口 可以获取@ResponseBody返回值
+ * 2.使用spring4.1以上版本的新特性：@ControllerAdvice注解和spring 4.1以上版本的ResponseBodyAdvice接口 可以获取@ResponseBody返回值
  * 
  * 注意使用@ControllerAdvice时，一定要在context:component-scan配置中配置@ControllerAdvice，并让容器自动扫描加载
  * 
@@ -25,7 +25,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 public class ResultInterceptor implements ResponseBodyAdvice<Object> {
 
 	/** (non-Javadoc)
-	 * @see org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice#supports(org.springframework.core.MethodParameter, java.lang.Class)
+	 * @see org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
+	 * #supports(org.springframework.core.MethodParameter, java.lang.Class)
 	 * 
 	 * 只有supports()方法返回true时beforeBodyWrite()方法才会被调用
 	 * 
