@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestJava {
 	
@@ -66,6 +67,7 @@ public class TestJava {
 
 	public static void main(String[] args) {
 		TestJava test = new TestJava();
+		AtomicInteger ai = new AtomicInteger(0);
 	}
 
 }
