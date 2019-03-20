@@ -1,0 +1,49 @@
+Lucene、solr以及elasticsearch之间的区别和联系
+首先分别说明三者的概念：
+Lucene是一套信息检索工具包，并不包含搜索引擎系统，它包含了索引结构、读写索引工具、相关性工具、排序等功能，因此在使用Lucene时仍需要关注搜索引擎系统，
+例如数据获取、解析、分词等方面的东西。而solr和elasticsearch都是基于该工具包做的一些封装。
+
+Solr是一个有HTTP接口的基于Lucene的查询服务器，封装了很多Lucene细节，自己的应用可以直接利用诸如 .../solr?q=abc 这样的HTTP GET/POST请求去查询，维护修改索引。
+
+Elasticsearch也是一个建立在全文搜索引擎 Apache Lucene基础上的搜索引擎。采用的策略是分布式实时文件存储，并将每一个字段都编入索引，使其可以被搜索。
+
+Lucene使用上更加灵活，但是你需要自己处理搜素引擎系统架构，以及其他附加附加功能的实现。而Solr帮你做了更多，但是是一个处于高层的框架，Lucene很多新特性不能及时向上透传，
+所以有时候可能发现需要一个功能，Lucene是支持的，但是Solr上已经看不到相关接口。
+
+然后说明三者之间的区别
+首先说明三者之间的一个联系：solr和elasticsearch都是基于Lucene实现的！
+其次
+solr利用zookpper进行分布式管理，而elasticsearch自身带有分布式协调管理功能；
+solr比elasticsearch实现更加全面，solr官方提供的工恩能够更多，而elasticsearch本身更注	重于核心功能，高级功能多由第三方插件提供；
+solr在传统的搜索应用中表现好于elasticsearch，而elasticsearch在实时搜索应用方面比solr表现好！
+
+最后有必要说明一下传统搜索和实时搜索：
+传统搜索是从静态数据库中筛选出符合条件的结果，这种结果往往是不可变得、静态的。而实时搜索则是说用户对于搜索的结果是实时变化的。
+--------------------- 
+原文：https://blog.csdn.net/weixin_37886463/article/details/79447063 
+
+
+solr和Elasticsearch的区别和使用方式
+答：
+    a>solr和Elasticsearch的区别：
+      1）Solr建立索引时候，搜索效率下降，实时搜索效率不高，es实时搜索效率高
+      2）Solr利用Zookeeper进行分布式管理，而Elasticsearch自身带有分布式协调管理功能。
+      3）Solr支持更多格式的数据，比如JSON、XML、CSV，而Elasticsearch仅支持json文件格式。
+      4）Solr官方提供的功能更多，而Elasticsearch本身更注重于核心功能，高级功能多有第三方插件提供
+      5）Solr在传统的搜索应用中表现好于Elasticsearch，但在处理实时搜索应用时效率明显低于Elasticsearch。
+      6）Solr是传统搜索应用的有力解决方案，但Elasticsearch更适用于新兴的实时搜索应用。
+    b>补充说明：
+      1）Solr有一个更大、更成熟的用户、开发和贡献者社区
+      2）Solr支持多种数据格式的索引，比如：JSON、XML、CSV等多种数据格式
+      3）Solr搜索海量历史数据，速度非常快，毫秒级返回数据
+      4）es支持分布式，节点对外表现对等，加入节点自动均衡
+      5）es完全支持Apache Lucene的接近实时的搜索
+      6）es处理多租户multitenancy不需要特殊配置，而Solr需要更多的高级设置
+      7）es采用Gateway的概念，使得数据持久化更简单
+      8）es各节点组成对等的网络结构，某些节点出现故障时会自动分配其他节点代替其进行工作
+    c>使用方式：
+      1）solr一般要部署到web服务器上，比如tomcat，启动tomcat，配置solr和tomcat的关联
+      2）es一般可以单独启动，然后es和spring整合，调用SpringDataElasticSearch里面提供的方法
+--------------------- 
+原文：https://blog.csdn.net/qq_26963433/article/details/78615646 
+
