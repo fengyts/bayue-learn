@@ -1,17 +1,23 @@
 package learn.java.base;
 
 public class ExtendsObjectInit {
-	
+
 	private static char cd; // char默认值为 '\u0000'
 	private static boolean b = cd == '\u0000';
-	
+
 	public static void main(String[] args) {
 		Child c = new Child();
+		// 运行结果如下：
+		// 加载父类静态块
+		// 加载子类静态块
+		// 加载父类代码块
+		// 父类构造方法
+		// 加载子类代码块
+		// 加载子类构造方法
 		System.out.println(b);
 	}
 
 }
-
 
 class Parent {
 
@@ -30,7 +36,7 @@ class Parent {
 }
 
 class Child extends Parent {
-	
+
 	static {
 		System.out.println("加载子类静态块");
 	}
