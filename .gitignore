@@ -3,3 +3,5 @@
 .classpath
 .project
 .settings/
+.launch
+.externalToolBuilders/org.eclipse.wst.jsdt.core.javascriptValidator (3).launch
