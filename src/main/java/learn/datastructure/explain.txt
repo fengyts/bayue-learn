@@ -38,6 +38,19 @@ HashMap扩容  --  resize():
 
 https://baijiahao.baidu.com/s?id=1618550070727689060&wfr=spider&for=pc
 
+HashMap计算桶位置（数组的下标）算法：
+https://www.jianshu.com/p/70f6207e7bf0
+
+int hash = hash(key);
+int index = indexFor(hash, table.length);
+
+static int indexFor(int h, int length) {
+    return h & (length-1);
+}
+这个位运算等同于：hash % length
+
+
+
 
 
 

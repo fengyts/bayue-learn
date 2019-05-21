@@ -4,6 +4,7 @@ import java.util.Objects;
 
 /**
  * 模仿HashMap
+ * 
  * @author lenovopc
  *
  */
@@ -16,16 +17,16 @@ public class HashMapSimulation<K, V> implements MapCustom<K, V> {
 
 	transient int size;
 
-	/** 扩容阀值。
-	 * 即 扩容阀值 = HashMap 总容量 * 加载因子。当前 HashMap 的容量大于或等于扩容阀值的时候就会去执行扩容。
-	  * 扩容的容量为当前 HashMap 总容量的两倍。比如，当前 HashMap 的总容量为 16 ，那么扩容之后为 32 。 
+	/**
+	 * 扩容阀值。 即 扩容阀值 = HashMap 总容量 * 加载因子。当前 HashMap 的容量大于或等于扩容阀值的时候就会去执行扩容。
+	 * 扩容的容量为当前 HashMap 总容量的两倍。比如，当前 HashMap 的总容量为 16 ，那么扩容之后为 32 。
 	 */
 	transient int threshold;
 
-	/** 加载因子。
-	 * 所谓的加载因子就是 HashMap (当前的容量/总容量) 到达一定值的时候，HashMap 会实施扩容。
-	 * 加载因子也可以通过构造方法中指定，默认的值是 0.75 。
-	 * 举个例子，假设有一个 HashMap 的初始容量为 16 ，那么扩容的阀值就是 0.75 * 16 = 12 。也就是说，在你打算存入第 13 个值的时候，HashMap 会先执行扩容。
+	/**
+	 * 加载因子。 所谓的加载因子就是 HashMap (当前的容量/总容量) 到达一定值的时候，HashMap 会实施扩容。
+	 * 加载因子也可以通过构造方法中指定，默认的值是 0.75 。 举个例子，假设有一个 HashMap 的初始容量为 16 ，那么扩容的阀值就是
+	 * 0.75 * 16 = 12 。也就是说，在你打算存入第 13 个值的时候，HashMap 会先执行扩容。
 	 */
 	final float loadFactor;
 
@@ -72,6 +73,10 @@ public class HashMapSimulation<K, V> implements MapCustom<K, V> {
 		}
 	}
 
+	static final int indexFor(int hash, int length) {
+		return hash & (length - 1);
+	}
+
 	/**
 	 * 扩容
 	 */
@@ -80,6 +85,7 @@ public class HashMapSimulation<K, V> implements MapCustom<K, V> {
 
 	/**
 	 * 处理key=null
+	 * 
 	 * @param value
 	 */
 	private void putNullKey(V value) {
@@ -114,6 +120,14 @@ public class HashMapSimulation<K, V> implements MapCustom<K, V> {
 			return Objects.hashCode(key) ^ Objects.hashCode(value);
 		}
 
+	}
+	
+	public static void main(String[] args) {
+		String key = "abcdef";
+		int hash = hash(key);
+		int index = indexFor(hash, 16);
+		
+		System.out.println(index);
 	}
 
 }
