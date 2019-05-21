@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.springframework.stereotype.Controller;
+
 public class TestJava {
 	
 	public static String bytesToHexStr(byte[] byteArray) {
@@ -64,6 +66,8 @@ public class TestJava {
 		}
 	}
 	
+	
+	public void testWeb(){}
 
 	public static void main(String[] args) {
 		TestJava test = new TestJava();
