@@ -1,9 +1,16 @@
 package learn.datastructure.map;
 
 import java.util.Iterator;
-import java.util.Map.Entry;
+import java.util.Set;
 
 public abstract class AbstractMap<K, V> implements MapCustom<K, V> {
+	
+	transient Set<K> keySet;
+
+	@Override
+	public void clear() {
+		entrySet().clear();
+	}
 
 	@Override
 	public String toString() {

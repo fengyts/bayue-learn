@@ -10,9 +10,17 @@ public interface MapCustom<K, V> {
 
 	V get(Object key);
 
-	void remove(Object key);
+	V remove(Object key);
+
+	boolean isEmpty();
+
+	boolean containsKey(Object key);
+
+	void clear();
 
 	Set<Entry<K, V>> entrySet();
+
+	Set<K> keySet();
 
 	interface Entry<K, V> {
 		K getKey();
