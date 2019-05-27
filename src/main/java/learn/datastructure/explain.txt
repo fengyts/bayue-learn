@@ -1,3 +1,5 @@
+https://mp.weixin.qq.com/s/BuIEOGekgu1ayiTP4Uk8Yw
+
 data structure(数据结构)：
 HashMap:
 1.initialCapacity:容器初始容量，默认16,；初始容量必须是2的幂次方
