@@ -1,3 +1,5 @@
+https://mp.weixin.qq.com/s/BuIEOGekgu1ayiTP4Uk8Yw
+
 data structure(数据结构)：
 HashMap:
 1.initialCapacity:容器初始容量，默认16,；初始容量必须是2的幂次方
@@ -37,6 +39,19 @@ HashMap扩容  --  resize():
 6、如果桶满了(容量16*加载因子0.75)，就需要 resize（扩容2倍后重排）
 
 https://baijiahao.baidu.com/s?id=1618550070727689060&wfr=spider&for=pc
+
+HashMap计算桶位置（数组的下标）算法：
+https://www.jianshu.com/p/70f6207e7bf0
+
+int hash = hash(key);
+int index = indexFor(hash, table.length);
+
+static int indexFor(int h, int length) {
+    return h & (length-1);
+}
+这个位运算等同于：hash % length
+
+
 
 
 
