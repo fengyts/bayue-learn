@@ -4,14 +4,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import org.junit.Test;
 
 import learn.datastructure.map.HashMapSimulation;
 import learn.datastructure.map.MapCustom;
+import learn.datastructure.stack.StackSimulation;
 
 /**
  * 数据结构测试
+ * 
  * @author lenovopc
  *
  */
@@ -68,6 +71,27 @@ public class DataStructureTest {
 		mc.clear();
 		System.out.println(mc);
 
+	}
+
+	@Test
+	public void TestStack() {
+		Stack<String> stack = new Stack<>();
+		StackSimulation<String> ss = new StackSimulation<>();
+		for (int i = 97; i < 105; i++) {
+			stack.push(String.valueOf((char) i));
+			ss.push(String.valueOf((char) i));
+		}
+		System.out.println(stack);
+		System.out.println(ss.toString());
+
+		String pop = stack.pop();
+		String popss = ss.pop();
+		System.out.println(pop + "--popMy:" + popss);
+		System.out.println(stack);
+		System.out.println(ss.toString());
+		
+		System.out.println(stack.size());
+		System.out.println(ss.size());
 	}
 
 }
