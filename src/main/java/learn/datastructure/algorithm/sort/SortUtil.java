@@ -72,9 +72,8 @@ public class SortUtil {
 		for (int i = 0; i < len - 1; i++) {
 			current = arr[i + 1];// 假设第一个是有序的,从第二个开始往前插
 			int preIndex = i;// 记录当前值current的前一个的索引
-			int preIndexVal = arr[preIndex];
-			while (preIndex >= 0 && current < preIndexVal) {
-				arr[preIndex + 1] = preIndexVal; // 不满足条件的往后挪移，给current值腾出正确位置
+			while (preIndex >= 0 && current < arr[preIndex]) {
+				arr[preIndex + 1] = arr[preIndex]; // 不满足条件的往后挪移，给current值腾出正确位置
 				preIndex--;
 			}
 			// while里面preIndex是自减的,所以此处是arr[preIndex + 1]
