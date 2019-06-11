@@ -1,14 +1,17 @@
 原文：https://blog.csdn.net/qq_25005909/article/details/78981512 
 
 对象生命周期和类生命周期的区别：
-	对象的生命周期只是类的生命周期中使用阶段的直接引用的一种情况（即实例化对象），而类的生命周期比对象的生命周期要长的多。
+对象的生命周期只是类的生命周期中使用阶段的直接引用的一种情况（即实例化对象），而类的生命周期比对象的生命周期要长的多。
 
 java对象生命周期
 对象的整个生命周期大致可以分为7个阶段：
-创建阶段（Creation）、应用阶段（Using）、
-不可视阶段（Invisible）、不可到达阶段（Unreachable）、
-可收集阶段（Collected）、终结阶段（Finalized）、
-释放阶段（Free）(有些地方又叫：对象空间重分配阶段(De-allocated))。
+1.创建阶段（Creation）、
+2.应用阶段（Using）、
+3.不可视阶段（Invisible）、
+4.不可到达阶段（Unreachable）、
+5.可收集阶段（Collected）、
+6.终结阶段（Finalized）、
+7.释放阶段（Free）(有些地方又叫：对象空间重分配阶段(De-allocated))。
 
 阶段1：创建阶段
 一个Java类（除Object类外）至少有一个父类（Object），这个规则既是强制的，也是隐式的。

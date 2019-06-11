@@ -1,0 +1,1 @@
+ygbi_property_fee_bill.sql: 是一张百万数据级别的表,这里只有表结构。具体数据在百度云盘
