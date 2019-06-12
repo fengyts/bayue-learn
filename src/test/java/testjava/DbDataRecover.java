@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,11 +34,14 @@ public class DbDataRecover {
 
 	private static Properties initProp() {
 		Properties prop = new Properties();
-		final String url = "jdbc:mysql://47.94.199.26:3306/ygbi1?allowMultiQueries=true&useUnicode=true&characterEncoding=utf-8&useSSL=false";
-		final String user = "chadmin";
-		final String password = "8-#xgC%p(t85X";
+//		final String url = "jdbc:mysql://47.94.199.26:3306/ygbi1?allowMultiQueries=true&useUnicode=true&characterEncoding=utf-8&useSSL=false";
+//		final String user = "chadmin";
+//		final String password = "8-#xgC%p(t85X";
+		final String url = "jdbc:mysql://121.40.204.123:3306/ygbi?useUnicode=true&allowMultiQueries=true";
+		final String user = "eampuser";
+		final String password = "zhanyi88";
 		final String db_driver = "com.mysql.jdbc.Driver";
-		final String db_schema = "ygbi1";
+		final String db_schema = "ygbi";
 		prop.setProperty("db_url", url);
 		prop.setProperty("db_username", user);
 		prop.setProperty("db_password", password);
@@ -50,7 +52,7 @@ public class DbDataRecover {
 		return prop;
 	}
 
-	public static void recoverFileDb() {
+	public static void separateBillionSqlData() {
 		try {
 			final String basePath = "C:\\Users\\lenovopc\\Desktop\\ygbi\\";
 			final String recoverFile = basePath + "recover\\";
@@ -103,7 +105,7 @@ public class DbDataRecover {
 		conn = jdbcPool.getConnection();
 	}
 
-	private void execute(String sql) {
+	private void execute(final String sql) {
 		try {
 			getConnection();
 			//			pstat = conn.prepareStatement(sql);
@@ -118,22 +120,21 @@ public class DbDataRecover {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if (null != conn)
-					conn.close();
-				if (null != pstat)
-					pstat.close();
-				if (null != stat)
-					stat.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			close();
+		}
+	}
+
+	private void close() {
+		try {
+			if (null != conn)
+				conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
 	private String parseSql(File file) {
 		final StringBuilder sql = new StringBuilder();
-		System.out.println("start handle sql file: " + file.getName());
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
@@ -141,7 +142,6 @@ public class DbDataRecover {
 			while (null != (line = br.readLine())) {
 				sql.append(line);
 			}
-			//			System.out.println("success handle sql file: " + f.getName()); 
 			return sql.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -160,29 +160,36 @@ public class DbDataRecover {
 		File file = new File(recoverFile);
 		File[] sqlFiles = file.listFiles();
 		for (File f : sqlFiles) {
-			String sql = parseSql(f);
+			final String sql = parseSql(f);
 			ThreadPool.getThreadPool().execute(new Runnable() {
 				@Override
 				public void run() {
+					System.out.println("start handle sql file: " + f.getName());
 					execute(sql);
 				}
 			});
 		}
+
+		ThreadPool.closePool();
 	}
 
 	static final class ThreadPool {
-		private static final int THREAD_SIZE = 8;
+		private static final int THREAD_POOL_SIZE = 8;
 		private static volatile ExecutorService threadFixedPool;
 
 		public static ExecutorService getThreadPool() {
 			if (null == threadFixedPool) {
 				synchronized (ThreadPool.class) {
 					if (null == threadFixedPool) {
-						threadFixedPool = Executors.newFixedThreadPool(THREAD_SIZE);
+						threadFixedPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 					}
 				}
 			}
 			return threadFixedPool;
+		}
+
+		public static void closePool() {
+			threadFixedPool.shutdown();
 		}
 	}
 
@@ -194,7 +201,10 @@ public class DbDataRecover {
 			final String recoverFile = basePath + "recover\\";
 			DbDataRecover recover = new DbDataRecover();
 
+			long startTime = System.currentTimeMillis();
 			recover.doRecover(recoverFile);
+			long endTime = System.currentTimeMillis();
+			System.out.println("total takes time: " + (endTime - startTime) / 1000 + " seconds");
 
 			//			final String specialF = recoverFile + "10.sql";
 			//			String sql = recover.parseSql(new File(specialF));
